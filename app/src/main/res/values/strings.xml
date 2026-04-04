@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Trabalho_1_DB</string>
+    <string name="login_title">SCHEDULE</string>
+    <string name="user_input_title">user</string>
+    <string name="input_password_title">password</string>
+    <string name="login_button">Login</string>
+    <string name="back_to_login">Volta para login</string>
 </resources>
