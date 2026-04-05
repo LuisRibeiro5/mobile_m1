@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         User user = new User("user", "user", "123456",
                 "John Doe", "Sales", "Sales Manager");
 
-        User user2 = new User("admin", "admin", "123456",
-                "John Doe", "Sales", "Sales Manager");
+        User user2 = new User("admin", "admin", "789100",
+                "Kauan ta mec", "TI", "development");
 
         Intent intent = new Intent(this, LogHoursActivity.class);
 
