@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.861" />
+        app:layout_constraintVertical_bias="0.923" />
 
     <TextView
         android:id="@+id/employedId"
@@ -60,12 +60,32 @@
         android:id="@+id/linear_log_layout"
         android:layout_width="412dp"
         android:layout_height="442dp"
-        android:layout_marginBottom="60dp"
         android:background="#B269F4"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/back_to_login"
+        app:layout_constraintBottom_toTopOf="@+id/tvPreenchidos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvFaltantes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="0 horas de trabalho ainda não foram registradas."
+        app:layout_constraintBottom_toTopOf="@+id/back_to_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvPreenchidos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="0 horas de trabalho já estão preenchidas."
+        app:layout_constraintBottom_toTopOf="@+id/tvFaltantes"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
