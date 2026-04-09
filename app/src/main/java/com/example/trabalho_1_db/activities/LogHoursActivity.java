@@ -124,25 +124,52 @@ public class LogHoursActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        verificarMudancaDeDia();
+        boolean diaMudou = verificarMudancaDeDia();
+        
+        //Aqui kaunzinho se o dia NÃO mudou, o app só foi minimizado no mesmo dia
+        //Atualizamos a tela para o horário atual sem perder os textos digitados
+        if (!diaMudou) {
+            atualizarCamposSemPerderDados();
+        }
     }
 
-    private void verificarMudancaDeDia() {
+    //kaunzinho troquei algumas coisas para retornar TRUE ou FALSE, poque a questão 5 e 6 tem q "trabalhar juntas" pra verificar se o dia mudou ou se o app só foi minimizado.
+    private boolean verificarMudancaDeDia() {
         android.content.SharedPreferences prefs = getSharedPreferences("MeuAppPrefs", android.content.Context.MODE_PRIVATE);
         String dataSalva = prefs.getString("data_ultimo_acesso", "");
 
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
         String dataAtual = sdf.format(new java.util.Date());
 
-        //Se a data salva não for vazia e for diferente da data atual, o dia virou!
+        //se a data salva não for vazia e for diferente da data atual, o dia virou
         if (!dataSalva.isEmpty() && !dataSalva.equals(dataAtual)) {
-            //Como você já limpa e recria os campos dinamicamente no setupLogLayout(), 
-            //basta chamá-lo novamente para ele gerar os campos vazios com base no novo horário.
-            setupLogLayout();
+            setupLogLayout(); //limpa e recria vazio
+            prefs.edit().putString("data_ultimo_acesso", dataAtual).apply();
+            return true; //Avisa que o dia mudou
         }
 
-        //Atualiza a data salva para hoje
         prefs.edit().putString("data_ultimo_acesso", dataAtual).apply();
+        return false; //avisa que continuamos no mesmo dia
+    }
+
+    //para salvar e restaurar sem perder os dados.
+    private void atualizarCamposSemPerderDados() {
+        //Salva os textos atuais na memória usando o Hint
+        java.util.Map<String, String> textosSalvos = new java.util.HashMap<>();
+        for (EditText et : listaDeCampos) {
+            textosSalvos.put(et.getHint().toString(), et.getText().toString());
+        }
+
+        //Recria os campos para incluir os novos horários que passaram enquanto estava minimizado
+        setupLogLayout();
+
+        //Devolve os textos que guardamos na memória para os seus respectivos campos
+        for (EditText et : listaDeCampos) {
+            String hint = et.getHint().toString();
+            if (textosSalvos.containsKey(hint)) {
+                et.setText(textosSalvos.get(hint));
+            }
+        }
     }
 
 
