@@ -121,4 +121,64 @@ public class LogHoursActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        verificarMudancaDeDia();
+    }
+
+    private void verificarMudancaDeDia() {
+        android.content.SharedPreferences prefs = getSharedPreferences("MeuAppPrefs", android.content.Context.MODE_PRIVATE);
+        String dataSalva = prefs.getString("data_ultimo_acesso", "");
+
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
+        String dataAtual = sdf.format(new java.util.Date());
+
+        //Se a data salva não for vazia e for diferente da data atual, o dia virou!
+        if (!dataSalva.isEmpty() && !dataSalva.equals(dataAtual)) {
+            //Como você já limpa e recria os campos dinamicamente no setupLogLayout(), 
+            //basta chamá-lo novamente para ele gerar os campos vazios com base no novo horário.
+            setupLogLayout();
+        }
+
+        //Atualiza a data salva para hoje
+        prefs.edit().putString("data_ultimo_acesso", dataAtual).apply();
+    }
+
+
+    public void compartilharConteudo(View view) {
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
+        String dataAtual = sdf.format(new java.util.Date());
+
+        //Pega o usuário que veio da tela de login
+        User user = (User) getIntent().getSerializableExtra("user");
+        String nomeUsuario = (user != null) ? user.getFullName() : "Usuário Desconhecido";
+
+        StringBuilder textoParaCompartilhar = new StringBuilder();
+        textoParaCompartilhar.append("Data: ").append(dataAtual).append("\n");
+        textoParaCompartilhar.append("Usuário: ").append(nomeUsuario).append("\n\n");
+        textoParaCompartilhar.append("Preenchimentos do dia:\n");
+
+        //Itera pela sua lista de campos já existente e pega o que o usuário digitou
+        for (EditText et : listaDeCampos) {
+            String horario = et.getHint().toString(); //Pega o hint (ex: "Log 8h - 9h")
+            String preenchimento = et.getText().toString().trim();
+            
+            if (!preenchimento.isEmpty()) {
+                textoParaCompartilhar.append("- ").append(horario).append(": ").append(preenchimento).append("\n");
+            } else {
+                textoParaCompartilhar.append("- ").append(horario).append(": (vazio)\n");
+            }
+        }
+
+        //Cria a Intent para enviar (compartilhar)
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, textoParaCompartilhar.toString());
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, "Compartilhar dados via:");
+        startActivity(shareIntent);
+    }
+    
 }
