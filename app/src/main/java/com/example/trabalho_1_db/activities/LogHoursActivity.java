@@ -47,6 +47,8 @@ public class LogHoursActivity extends AppCompatActivity {
 
 
         binding.backToLogin.setOnClickListener(this::back_to_login);
+
+        binding.btnCompartilhar.setOnClickListener(this::compartilharConteudo);
     }
 
     public void setupTextViews() {
